@@ -9,7 +9,6 @@ typedef struct {
 
 void insertion_sort(Student students[], int n) {
     // TODO: 在这里添加你的代码
-    // I AM NOT DONE
     Student temp;
     int i,j;
     for (i =1;i<n;i++){

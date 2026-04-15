@@ -5,8 +5,27 @@ int main() {
     char destination[101];
     
 	// TODO: 在这里添加你的代码
-    // I AM NOT DONE
-    
+    //strcpy(destination, source);
+
+    char* src = source;
+    char* des = destination;
+
+    //结束标记 '\0'
+    while(*src != '\0'){
+        *des = *src; //解引用
+        src++;
+        des++;
+    }
+    *des = '\0';
+
+
+        // int i = 0;
+        // while(source[i] != '\0'){
+        //     destination[i] = source[i];
+        //     i++;
+        // }
+        // destination[i] = '\0';
+
     printf("拷贝后的字符串: %s", destination);
     
     return 0;

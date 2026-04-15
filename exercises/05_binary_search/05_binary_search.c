@@ -15,8 +15,18 @@ Student students[MAX_STUDENTS];
 int n;
 
 int binary_search(const char *target_name) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        int temp = strcmp(students[mid].name, target_name);
+        if (temp == 0)
+            return mid;
+        else if (temp < 0)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1;
 }
 
 int main(void) {

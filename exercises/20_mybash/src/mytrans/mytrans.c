@@ -7,8 +7,11 @@
 #include <string.h>
 
 void trim(char *str) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    char *start = str;
+    while (*start && isspace((unsigned char)*start)) start++;
+    if (start != str) memmove(str, start, strlen(start) + 1);
+    char *end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) *end-- = '\0';
 }
 
 int load_dictionary(const char *filename, HashTable *table,
@@ -24,8 +27,27 @@ int load_dictionary(const char *filename, HashTable *table,
   char current_translation[1024] = {0};
   int in_entry = 0;
 
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    while (fgets(line, sizeof(line), file)) {
+        line[strcspn(line, "\r\n")] = '\0';
+
+        if (line[0] == '#') {
+            if (in_entry && current_word[0]) {
+                hash_table_insert(table, current_word, current_translation);
+                (*dict_count)++;
+            }
+            strncpy(current_word, line + 1, sizeof(current_word) - 1);
+            trim(current_word);
+            current_translation[0] = '\0';
+            in_entry = 1;
+        } else if (strncmp(line, "Trans:", 6) == 0) {
+            strncpy(current_translation, line + 6, sizeof(current_translation) - 1);
+        }
+    }
+
+    if (in_entry && current_word[0]) {
+        hash_table_insert(table, current_word, current_translation);
+        (*dict_count)++;
+    }
 
   fclose(file);
   return 0;
@@ -44,8 +66,20 @@ int __cmd_mytrans(const char* filename) {
   }
 
   printf("=== 哈希表版英语翻译器（支持百万级数据）===\n");
+
+  // 从 text 文件路径推导 dict.txt 路径（同目录）
+  char dict_path[512];
+  strncpy(dict_path, filename, sizeof(dict_path) - 1);
+  dict_path[sizeof(dict_path) - 1] = '\0';
+  char *last_slash = strrchr(dict_path, '/');
+  if (last_slash) {
+    strcpy(last_slash + 1, "dict.txt");
+  } else {
+    strcpy(dict_path, "dict.txt");
+  }
+
   uint64_t dict_count = 0;
-  if (load_dictionary("/workspace/exercises/20_mybash/src/mytrans/dict.txt", table, &dict_count) != 0) {
+  if (load_dictionary(dict_path, table, &dict_count) != 0) {
     fprintf(stderr, "加载词典失败，请确保 dict.txt 存在。\n");
     free_hash_table(table);
     return 1;

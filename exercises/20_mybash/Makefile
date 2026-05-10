@@ -7,6 +7,9 @@
 
 PWD := $(shell pwd)
 
+# 抑制递归 make 的命令回显与 Entering/Leaving，避免输出超过测试框架 4KB buffer
+MAKEFLAGS += -s --no-print-directory
+
 # 所有子模块目录（静态库：生成 .a）
 SUBDIRS := \
 	mysed \

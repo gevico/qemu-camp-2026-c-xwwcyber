@@ -74,7 +74,6 @@ int parse_input(char *input, char **args) {
   int i = 0;
   int in_quotes = 0;
   char *buf = input;
-  char *arg_start = NULL;
   char arg_buf[MAX_INPUT];  // 临时存储当前正在解析的参数
   int arg_buf_idx = 0;
 
